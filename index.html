@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KEPLER // Signal Vetting Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="stars stars-a"></div><div class="stars stars-b"></div>
+  <main class="app-shell">
+    <header class="masthead">
+      <a class="wordmark" href="#"><span class="orbit-icon">◉</span><span>KEPLER <b>VETTING</b></span></a>
+      <div class="mission-status"><span class="status-light"></span> ARCHIVE LINKED <span class="separator">/</span> SIGNAL REVIEW 07</div>
+      <button class="reset-button" id="resetButton" type="button">NEW SIGNAL <span>＋</span></button>
+    </header>
+
+    <section class="intro">
+      <div class="intro-copy">
+        <p class="kicker">NASA EXOPLANET ARCHIVE / KOI SCREENING</p>
+        <h1>Is this signal<br><span>another world?</span></h1>
+        <p class="lede">A rapid-vetting console for separating physically plausible planetary transits from stellar noise, eclipsing binaries, and other false positives.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mission-label">OBSERVATION MODE</span>
+        <strong>TRANSIT<br>PHOTOMETRY</strong>
+        <div class="mini-orbit"><i></i><b></b></div>
+        <span class="mission-foot">11 RAW PHYSICS FEATURES</span>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <article class="panel measurements">
+        <div class="panel-title"><span class="section-number">01</span><div><h2>Observation inputs</h2><p>Enter the measured characteristics of the candidate signal.</p></div><span class="mode-chip">KOI / RAW</span></div>
+        <div class="field-grid">
+          <label class="field"><span>ORBITAL PERIOD <em>days</em></span><input id="period" type="number" min=".1" max="1000" step=".1" value="10"><small>Time between recurring transits</small></label>
+          <label class="field"><span>TRANSIT SNR <em>signal / noise</em></span><input id="snr" type="number" min="1" max="200" step=".1" value="50"><small>Model signal-to-noise ratio</small></label>
+          <label class="field"><span>TRANSIT DURATION <em>hours</em></span><input id="duration" type="number" min=".1" max="50" step=".1" value="3"><small>Length of the observed dip</small></label>
+          <label class="field"><span>STELLAR TEMPERATURE <em>kelvin</em></span><input id="steff" type="number" min="2000" max="10000" step="10" value="5700"><small>Effective surface temperature</small></label>
+          <label class="field"><span>TRANSIT DEPTH <em>ppm</em></span><input id="depth" type="number" min="1" max="100000" step="1" value="300"><small>Brightness decrease at transit</small></label>
+          <label class="field"><span>SURFACE GRAVITY <em>log g</em></span><input id="slogg" type="number" min="2" max="5.5" step=".01" value="4.5"><small>Stellar gravitational density</small></label>
+          <label class="field"><span>PLANETARY RADIUS <em>Earth radii</em></span><input id="prad" type="number" min=".1" max="50" step=".01" value="1.5"><small>Estimated candidate radius</small></label>
+          <label class="field"><span>STELLAR RADIUS <em>solar radii</em></span><input id="srad" type="number" min=".1" max="20" step=".01" value="1"><small>Host star radius estimate</small></label>
+          <label class="field"><span>EQUILIBRIUM TEMP. <em>kelvin</em></span><input id="teq" type="number" min="100" max="3000" step="1" value="300"><small>Estimated planetary temperature</small></label>
+          <label class="field"><span>KEPLER MAGNITUDE <em>brightness</em></span><input id="kepmag" type="number" min="5" max="20" step=".01" value="12"><small>Observed stellar brightness</small></label>
+          <label class="field"><span>INSOLATION FLUX <em>Earth flux</em></span><input id="insol" type="number" min="0" max="5000" step=".01" value="1.2"><small>Radiation received by candidate</small></label>
+        </div>
+        <div class="actions"><button class="classify-button" id="classifyButton" type="button"><span>VET SIGNAL</span><b>↗</b></button><span class="action-note" id="actionNote">AUTO-REVIEW ENABLED</span></div>
+      </article>
+
+      <aside class="panel result">
+        <div class="panel-title"><span class="section-number">02</span><div><h2>Vetting verdict</h2><p>Model probability estimate</p></div><span class="mode-chip live">LIVE</span></div>
+        <div class="verdict-visual">
+          <div class="planet-orbit"><div class="star"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="planet"></div></div>
+          <div class="verdict-copy"><span class="verdict-eyebrow">CLASSIFICATION</span><h3 id="verdict">LIKELY CONFIRMED</h3><p id="verdictDetail">Signal profile is consistent with a planetary transit.</p></div>
+        </div>
+        <div class="probability"><div class="probability-head"><span>CONFIRMED-PLANET PROBABILITY</span><strong id="probabilityValue">98.8%</strong></div><div class="probability-track"><i id="probabilityBar"></i></div><div class="confidence-labels"><span>FALSE POSITIVE</span><span>MANUAL REVIEW ZONE</span><span>CONFIRMED</span></div></div>
+        <div class="review-flag" id="reviewFlag"><span>✦</span><div><b>HIGH CONFIDENCE</b><small>Automated screening can proceed.</small></div></div>
+        <div class="result-footer"><span>CLASSIFIER</span><strong>TUNED XGBOOST</strong><span>ROC-AUC</span><strong>0.98</strong></div>
+      </aside>
+    </section>
+
+    <section class="insight-grid">
+      <article class="panel orbital-panel"><div class="panel-title"><span class="section-number">03</span><div><h2>Transit geometry</h2><p>Derived visual reference</p></div></div><div class="transit-chart"><div class="chart-grid"></div><div class="curve"></div><div class="chart-label left">BASELINE FLUX</div><div class="chart-label dip">TRANSIT DEPTH</div><div class="chart-axis"><span>−2h</span><span>0</span><span>+2h</span></div></div></article>
+      <article class="panel feature-panel"><div class="panel-title"><span class="section-number">04</span><div><h2>Decision signals</h2><p>What the classifier weighs most</p></div></div><div class="feature-list"><div><span>PLANETARY RADIUS</span><i style="width:92%"></i><b>0.237</b></div><div><span>TRANSIT SNR</span><i style="width:61%"></i><b>0.145</b></div><div><span>INSOLATION FLUX</span><i style="width:56%"></i><b>0.134</b></div><div><span>ORBITAL PERIOD</span><i style="width:54%"></i><b>0.131</b></div><div><span>TRANSIT DEPTH</span><i style="width:31%"></i><b>0.077</b></div></div></article>
+    </section>
+    <footer><span>KEPLER VETTING CONSOLE</span><span>NASA EXOPLANET ARCHIVE / PHYSICS-ONLY FEATURE SET</span><span>NOT A SCIENTIFIC CONFIRMATION</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
